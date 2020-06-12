@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onisuka</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="add.css">
+</head>
+<body>
+    <input id="city" type="text" placeholder="Type a city" required>
+    <button id="submit" onclick="run()"> Click </button>
+    <div class="container">
+        <div class="sub_container">
+          <h3 class="temp_display" ></h3>
+          <button class="change_temperature" style ="height :30px; margin-top: 8px;" onclick="chng_temp()">C</button>
+        </div>
+        <div class="cntry_display"></div>
+        <div class="wind_display"></div>
+        <div class="desc_display"></div>
+        <div class = "icon_display">
+          <img class="icon" src="" >
+        </div>
+    </div>
+
+
+
+
+    <!-- <div class="container"> 
+        <div class="search_container">
+          <div class="search_box_section">hiii</div>
+          <div class="search_button_section"></div>
+        </div>
+        <div class="icon_container">
+            <div class="icon">okkk</div>
+        </div>
+        <div class="remaining_items_conatiner">
+              <div></div>
+              <div></div>
+              <div></div>
+        </div>
+    </div> -->
+
+
+ <!-- All js code are below  -->   
+<script> 
+var first = 'http://api.openweathermap.org/data/2.5/weather?q=';
+var third = '&units=metric&appid=';
+// give your unique api key.....just the key inside ''
+var api_id = '';
+
+var cty,temp,des,wSpd,country,icn,icn_url;
+var urlid;
+
+let temperature = document.querySelector(".temp_display"); 
+let cntry = document.querySelector(".cntry_display");
+let wind_spd = document.querySelector(".wind_display");
+let desc = document.querySelector(".desc_display");
+
+function run(){
+     cty = document.getElementById("city").value;
+    urlid = first + cty + third + api_id;
+    //alert(urlid);
+
+    //now fetching the data from the open source api
+    fetch(urlid)
+  .then(response => response.json())
+  .then(function(response){
+    console.log(response);
+        des = response.weather[0].description;
+        temp=response.main.temp;
+        country =response.sys.country;
+        wSpd = response.wind.speed;
+        icn = response.weather[0].icon;
+        icn_url = 'http://openweathermap.org/img/wn/' + icn + '@2x.png';
+        document.querySelector(".icon").src = icn_url;
+        //alert("temperature is :- " + temp + " Country is : " +country + " Wind Speed is: " + wSpd);
+
+        console.log(temp);
+        //adding the temp.... value to html displays
+        temperature.textContent = temp;
+        cntry.textContent = country;
+        wind_spd.textContent = wSpd;
+        desc.textContent = des;
+
+  })
+};
+
+function chng_temp(){
+  //getting the value from temp box
+  var temp_to_chng = document.querySelector(".temp_display").textContent;
+  console.log(temp_to_chng);
+
+  //checking if the value is in celsius
+  if(document.querySelector(".change_temperature").textContent === 'C')
+  {
+    var fer =( (temp_to_chng) * 9)/5 + 32;
+    console.log(fer);
+    document.querySelector(".temp_display").textContent='';
+    document.querySelector(".temp_display").textContent = fer;
+      //changing the sign to fehren in button.
+    document.querySelector(".change_temperature").textContent = 'F';
+  }
+  else{
+      var cel = Math.floor((( (temp_to_chng) - 32) * 5)/9);
+      console.log(cel);
+      document.querySelector(".temp_display").textContent='';
+      document.querySelector(".temp_display").textContent = cel;
+
+      document.querySelector(".change_temperature").textContent = 'C';
+  }
+};
+
+
+</script>
+</body>
+</html>
